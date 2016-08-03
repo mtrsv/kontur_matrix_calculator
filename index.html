@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <aside class="left-bar padding-standard">
+        <button id="btn-multiply" class="arrow-button arrow-button-right green">Умножить матрицы</button>
+        <button id="btn-clear" class="btn btn-form"><span class="konturIconic icon-clear"></span> Очистить матрицы</button>
+        <button id="btn-exchange" class="btn btn-form"><span class="konturIconic icon-exchange"></span> Поменять матрицы местами</button>
+
+        <div id="matrix-radio-selector">
+            <input id="first-matrix-radio" class="btn-radio" type="radio" name="matrix-selection" checked="checked">
+            <label for="first-matrix-radio" class="btn-radio-label">Матрица A</label>
+            <input id="second-matrix-radio" class="btn-radio" type="radio" name="matrix-selection">
+            <label for="second-matrix-radio" class="btn-radio-label">Матрица B</label>
+        </div>
+
+
+        <div id="row-controls">
+            <button id="btn-add-row" class="btn btn-form">
+                <span class="konturIconic icon-plus"></span> Добавить
+            </button>
+            <button id="btn-delete-row" class="btn btn-form">
+                <span class="konturIconic icon-minus"></span> Удалить
+            </button>
+            <span>строку</span>
+        </div>
+        <div id="col-controls">
+            <button id="btn-add-coll" class="btn btn-form">
+                <span class="konturIconic icon-plus"></span> Добавить
+            </button>
+            <button id="btn-delete-coll" class="btn btn-form">
+                <span class="konturIconic icon-minus"></span> Удалить
+            </button>
+            <span>столбец</span>
+        </div>
+        <div id="error-text"></div>
+
+    </aside>
+    <div class="right-bar padding-standard">
+        <div class="row">
+            <div class="result-matrix">
+                <div class="matrix-border left"></div>
+                <div class="matrix">
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c1,1">
+                        <input class="matrix-cell" type="text" value="c1,2">
+                        <input class="matrix-cell" type="text" value="c1,3">
+                    </div>
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c2,1">
+                        <input class="matrix-cell" type="text" value="c3,2">
+                        <input class="matrix-cell" type="text" value="c4,3">
+                    </div>
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c2,1">
+                        <input class="matrix-cell" type="text" value="c3,2">
+                        <input class="matrix-cell" type="text" value="c4,3">
+                    </div>
+                </div>
+                <div class="matrix-border right"></div>
+            </div>
+            <div class="first-matrix">
+                <div class="matrix-border left"></div>
+                <div class="matrix">
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c1,1">
+                        <input class="matrix-cell" type="text" value="c1,2">
+                        <input class="matrix-cell" type="text" value="c1,3">
+                    </div>
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c2,1">
+                        <input class="matrix-cell" type="text" value="c3,2">
+                        <input class="matrix-cell" type="text" value="c4,3">
+                    </div>
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c2,1">
+                        <input class="matrix-cell" type="text" value="c3,2">
+                        <input class="matrix-cell" type="text" value="c4,3">
+                    </div>
+                </div>
+                <div class="matrix-border right"></div>
+            </div>
+            <div class="matrix-label">A</div>
+        </div>
+        <div class="second-matrix">
+                <div class="matrix-border left"></div>
+                <div class="matrix">
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c1,1">
+                        <input class="matrix-cell" type="text" value="c1,2">
+                        <input class="matrix-cell" type="text" value="c1,3">
+                    </div>
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c2,1">
+                        <input class="matrix-cell" type="text" value="c3,2">
+                        <input class="matrix-cell" type="text" value="c4,3">
+                    </div>
+                    <div class="matrix-row">
+                        <input class="matrix-cell" type="text" value="c2,1">
+                        <input class="matrix-cell" type="text" value="c3,2">
+                        <input class="matrix-cell" type="text" value="c4,3">
+                    </div>
+                </div>
+                <div class="matrix-border right"></div>
+            </div>
+        <div id="label-b" class="matrix-label">B</div>
+    </div>
+
+    <script src="jquery-2.1.4.min.js"></script>
+    <script src="matrix_calculator.js"></script>
+</body>
+</html>
