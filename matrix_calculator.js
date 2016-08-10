@@ -1,193 +1,4 @@
 (function(global) {
-
-    // var testDiv = $("#test")[0];
-    var DEFAULT_FIRST = 3;
-    var DEFAULT_SECOND = 2;
-    var DEFAULT_THIRD = 4;
-    var MAX_SIZE = 10;
-    var MIN_SIZE = 2;
-    var MAX_VALUE = 10;
-
-
-    var resultDiv = $(".result-matrix")[0];
-    var aDiv = $(".first-matrix")[0];
-    var bDiv = $(".second-matrix")[0];
-    var matrixA = new Matrix(3, 2, [[1, 2],
-        [3, 4],
-        [5, 6]]);
-
-    var matrixB = new Matrix(2, 4, [[1, 2, 3, 4],
-        [5, 6, 7, 8]]);
-
-    var matrixC = new Matrix(3, 4);
-
-    renderAll();
-
-
-    var btnMultiply = $("#btn-multiply")[0];
-    var btnClear = $("#btn-clear")[0];
-    var btnExchange = $("#btn-exchange")[0];
-    var btnAddRow = $("#btn-add-row")[0];
-    var btnDeleteRow = $("#btn-delete-row")[0];
-    var btnAddColl = $("#btn-add-coll")[0];
-    var btnDeleteColl = $("#btn-delete-coll")[0];
-
-    btnMultiply.onclick = (function () {
-        updateElements();
-
-        matrixC = calculateMatrixSumm(matrixA, matrixB);
-        renderMatrix(matrixC, resultDiv, "readonly");
-    });
-    btnClear.onclick = (function () {
-        matrixA.clear();
-        matrixB.clear();
-        matrixC.clear();
-        showError("none");
-        renderAll();
-    });
-    btnExchange.onclick = (function () {
-        // exchangeMatrices(matrixA,matrixB);
-        var tempMatrix = matrixB;
-        matrixB = matrixA;
-        matrixA = tempMatrix;
-
-        matrixA.rotateMatrix();
-        matrixB.rotateMatrix();
-        matrixC = calculateMatrixSumm(matrixA, matrixB);
-        renderAll();
-        showError("none");
-    });
-    btnAddRow.onclick = (function () {
-        switch ($('input[name=matrix-selection]:checked')[0].id) {
-            case "first-matrix-radio":
-                matrixA.addRow();
-                break;
-            case "second-matrix-radio":
-                matrixB.addRow();
-                break;
-        }
-    });
-    btnDeleteRow.onclick = (function () {
-        switch ($('input[name=matrix-selection]:checked')[0].id) {
-            case "first-matrix-radio":
-                matrixA.deleteRow();
-                break;
-            case "second-matrix-radio":
-                matrixB.deleteRow();
-                break;
-        }
-        showError("none");
-
-    });
-    btnAddColl.onclick = (function () {
-        switch ($('input[name=matrix-selection]:checked')[0].id) {
-            case "first-matrix-radio":
-                matrixA.addColl();
-                break;
-            case "second-matrix-radio":
-                matrixB.addColl();
-                break;
-        }
-        showError("none");
-
-    });
-    btnDeleteColl.onclick = (function () {
-        switch ($('input[name=matrix-selection]:checked')[0].id) {
-            case "first-matrix-radio":
-                matrixA.deleteColl();
-                break;
-            case "second-matrix-radio":
-                matrixB.deleteColl();
-                break;
-        }
-        showError("none");
-
-    });
-
-    function updateElements() {
-        matrixA.updateElements(".first-matrix");
-        matrixB.updateElements(".second-matrix");
-    }
-
-    function setAllDefault() {
-        matrixA = new Matrix(DEFAULT_FIRST, DEFAULT_SECOND);
-        matrixB = new Matrix(DEFAULT_SECOND, DEFAULT_THIRD);
-        matrixC = new Matrix(DEFAULT_FIRST, DEFAULT_THIRD);
-    }
-
-    function renderAll() {
-        renderMatrix(matrixA, aDiv);
-        renderMatrix(matrixB, bDiv);
-        renderMatrix(matrixC, resultDiv, "readonly");
-        setLabelBWidth();
-        // console.log("render all");
-    }
-
-    function addListeners() {
-        var cellArray = $(".matrix-cell");
-        for (var i = 0; i < cellArray.length; i++) {
-            cellArray[i].onclick = function (e) {
-                this.select();
-                setLeftBarColor("#5199DB");
-            };
-            cellArray[i].onblur = function (e) {
-                setLeftBarColor("none");
-
-                e.target.classList.remove("sell-default");
-                if (isNaN(e.target.value)) {
-                    e.target.value = 0;
-                }
-                if (e.target.value > MAX_VALUE) {
-                    e.target.value = MAX_VALUE;
-                }
-                if (e.target.value < -MAX_VALUE) {
-                    e.target.value = -MAX_VALUE;
-                }
-
-            };
-        }
-    }
-
-    function removeListeners() {
-        var cellArray = $(".matrix-cell");
-        for (var i = 0; i < cellArray.length; i++) {
-            cellArray[i].onclick = null;
-            cellArray[i].onblur = null;
-        }
-    }
-
-    function showError(errorName) {
-        var errorText = '';
-        switch (errorName) {
-            case "not_commutative":
-                errorText = "Такие матрицы нельзя умножить, так как количесво столбцов матрицы А " +
-                    "не равно количеству строк матрицы В.";
-                setLeftBarColor("#F6C1C0");
-                break;
-            case "none":
-                errorText = "";
-                setLeftBarColor("none");
-                break;
-        }
-        var errorDiv = $("#error-text")[0];
-        errorDiv.innerText = errorText;
-
-    }
-
-    function setLeftBarColor(color) {
-        if (color == null || color == "none") {
-            color = '';
-        }
-        var asideDiv = $(".left-bar")[0];
-        asideDiv.style.backgroundColor = color;
-    }
-
-    var insertProperty = function (string, propName, propValue) {
-        var propToReplace = "{{" + propName + "}}";
-        string = string.replace(new RegExp(propToReplace, "g"), propValue);
-        return string
-    };
-
     function Matrix(rowsNumber, collsNumber, matrixElements) {
         this.rowsNumber = rowsNumber;
         this.collsNumber = collsNumber;
@@ -303,29 +114,194 @@
 
 
     }
+    // var testDiv = $("#test")[0];
+    var DEFAULT_FIRST = 3,
+        DEFAULT_SECOND = 2,
+        DEFAULT_THIRD = 4,
+        MAX_SIZE = 10,
+        MIN_SIZE = 2,
+        MAX_VALUE = 10;
 
 
-    /*function MatrixArr(rowsNumber, collsNumber, matrixElements) {
-     Matrix.prototype = Object.create([].prototype);
-     this.rowsNumber = rowsNumber;
-     this.collsNumber = collsNumber;
-     this.matrixElements = matrixElements || createElementsArray(rowsNumber,collsNumber);
+    var resultDiv = document.querySelector(".result-matrix"),
+        aDiv = document.querySelector(".first-matrix"),
+        bDiv = document.querySelector(".second-matrix"),
+        matrixA = new Matrix(3, 2, [[1, 2],
+            [3, 4],
+            [5, 6]]);
 
-     function createElementsArray(rows,colls){
-     var elements = [];
-     for (var i=0; i < rowsNumber; i++) {
-     var newRow = [];
-     elements[i] =  newRow;
-     for (var k=0; k < collsNumber; k++) {
-     // newRow[k] = 1;
-     newRow[k] = null;
-     }
-     }
-     console.log("Array:");
-     console.log(elements);
-     return elements;
-     }
-     }*/
+    var matrixB = new Matrix(2, 4, [[1, 2, 3, 4],
+            [5, 6, 7, 8]]),
+        matrixC = new Matrix(3, 4);
+
+    renderAll();
+
+
+    var btnMultiply = document.querySelector("#btn-multiply"),
+        btnClear = document.querySelector("#btn-clear"),
+        btnExchange = document.querySelector("#btn-exchange"),
+        btnAddRow = document.querySelector("#btn-add-row"),
+        btnDeleteRow = document.querySelector("#btn-delete-row"),
+        btnAddColl = document.querySelector("#btn-add-coll"),
+        btnDeleteColl = document.querySelector("#btn-delete-coll");
+
+    btnMultiply.addEventListener("click", function () {
+        updateElements();
+
+        matrixC = calculateMatrixSumm(matrixA, matrixB);
+        renderMatrix(matrixC, resultDiv, "readonly");
+    })
+    btnClear.addEventListener("click", function () {
+        matrixA.clear();
+        matrixB.clear();
+        matrixC.clear();
+        showError("none");
+        renderAll();
+    });
+    btnExchange.addEventListener("click", function () {
+        // exchangeMatrices(matrixA,matrixB);
+        var tempMatrix = matrixB;
+        matrixB = matrixA;
+        matrixA = tempMatrix;
+
+        matrixA.rotateMatrix();
+        matrixB.rotateMatrix();
+        matrixC = calculateMatrixSumm(matrixA, matrixB);
+        renderAll();
+        showError("none");
+    });
+    btnAddRow.addEventListener("click", function () {
+        switch ($('input[name=matrix-selection]:checked')[0].id) {
+            case "first-matrix-radio":
+                matrixA.addRow();
+                break;
+            case "second-matrix-radio":
+                matrixB.addRow();
+                break;
+        }
+    });
+    btnDeleteRow.addEventListener("click", function () {
+        switch ($('input[name=matrix-selection]:checked')[0].id) {
+            case "first-matrix-radio":
+                matrixA.deleteRow();
+                break;
+            case "second-matrix-radio":
+                matrixB.deleteRow();
+                break;
+        }
+        showError("none");
+
+    });
+    btnAddColl.addEventListener("click", function () {
+        switch ($('input[name=matrix-selection]:checked')[0].id) {
+            case "first-matrix-radio":
+                matrixA.addColl();
+                break;
+            case "second-matrix-radio":
+                matrixB.addColl();
+                break;
+        }
+        showError("none");
+
+    });
+    btnDeleteColl.addEventListener("click", function () {
+        switch ($('input[name=matrix-selection]:checked')[0].id) {
+            case "first-matrix-radio":
+                matrixA.deleteColl();
+                break;
+            case "second-matrix-radio":
+                matrixB.deleteColl();
+                break;
+        }
+        showError("none");
+
+    });
+
+    function updateElements() {
+        matrixA.updateElements(".first-matrix");
+        matrixB.updateElements(".second-matrix");
+    }
+
+    function setAllDefault() {
+        matrixA = new Matrix(DEFAULT_FIRST, DEFAULT_SECOND);
+        matrixB = new Matrix(DEFAULT_SECOND, DEFAULT_THIRD);
+        matrixC = new Matrix(DEFAULT_FIRST, DEFAULT_THIRD);
+    }
+
+    function renderAll() {
+        renderMatrix(matrixA, aDiv);
+        renderMatrix(matrixB, bDiv);
+        renderMatrix(matrixC, resultDiv, "readonly");
+        setLabelBWidth();
+        // console.log("render all");
+    }
+
+    function addListeners() {
+        var cellArray = $(".matrix-cell");
+        for (var i = 0; i < cellArray.length; i++) {
+            cellArray[i].onclick = function (e) {
+                this.select();
+                setLeftBarColor("#5199DB");
+            };
+            cellArray[i].onblur = function (e) {
+                setLeftBarColor("none");
+
+                e.target.classList.remove("sell-default");
+                if (isNaN(e.target.value)) {
+                    e.target.value = 0;
+                }
+                if (e.target.value > MAX_VALUE) {
+                    e.target.value = MAX_VALUE;
+                }
+                if (e.target.value < -MAX_VALUE) {
+                    e.target.value = -MAX_VALUE;
+                }
+
+            };
+        }
+    }
+
+    function removeListeners() {
+        var cellArray = $(".matrix-cell");
+        for (var i = 0; i < cellArray.length; i++) {
+            cellArray[i].onclick = null;
+            cellArray[i].onblur = null;
+        }
+    }
+
+    function showError(errorName) {
+        var errorText = '';
+        switch (errorName) {
+            case "not_commutative":
+                errorText = "Такие матрицы нельзя умножить, так как количесво столбцов матрицы А " +
+                    "не равно количеству строк матрицы В.";
+                setLeftBarColor("#F6C1C0");
+                break;
+            case "none":
+                errorText = "";
+                setLeftBarColor("none");
+                break;
+        }
+        var errorDiv = $("#error-text")[0];
+        errorDiv.innerText = errorText;
+
+    }
+
+    function setLeftBarColor(color) {
+        if (color == null || color == "none") {
+            color = '';
+        }
+        var asideDiv = $(".left-bar")[0];
+        asideDiv.style.backgroundColor = color;
+    }
+
+    function insertProperty(string, propName, propValue) {
+        var propToReplace = "{{" + propName + "}}";
+        string = string.replace(new RegExp(propToReplace, "g"), propValue);
+        return string
+    };
+
+
 
     function calculateMatrixSumm(matrixA, matrixB) {
         var resultMatrix = [];
