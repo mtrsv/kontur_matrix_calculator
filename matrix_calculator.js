@@ -1,8 +1,8 @@
 (function(global) {
-    function Matrix(rowsNumber, collsNumber, matrixElements) {
-        this.rowsNumber = rowsNumber;
-        this.collsNumber = collsNumber;
-        this.matrixElements = matrixElements || createElementsArray(rowsNumber, collsNumber);
+    function Matrix(options) {
+        this.rowsNumber = options.rowsNumber;
+        this.collsNumber = options.collsNumber;
+        this.matrixElements = options.matrixElements || createElementsArray(options.rowsNumber, options.collsNumber);
 
         var self = this;
 
@@ -46,7 +46,10 @@
         this.rotateMatrix = function () {
             var rotatedMatrix;
 
-            rotatedMatrix = new Matrix(self.collsNumber, self.rowsNumber);
+            rotatedMatrix = new Matrix({
+                rowsNumber: self.collsNumber,
+                collsNumber: self.rowsNumber});
+
             var rotatedElements = [];
             for (var i = 0; i < self.collsNumber; i++) {
                 rotatedElements[i] = [];
@@ -126,13 +129,21 @@
     var resultDiv = document.querySelector(".result-matrix"),
         aDiv = document.querySelector(".first-matrix"),
         bDiv = document.querySelector(".second-matrix"),
-        matrixA = new Matrix(3, 2, [[1, 2],
-            [3, 4],
-            [5, 6]]);
 
-    var matrixB = new Matrix(2, 4, [[1, 2, 3, 4],
-            [5, 6, 7, 8]]),
-        matrixC = new Matrix(3, 4);
+        matrixA = new Matrix({
+            rowsNumber: 3,
+            collsNumber: 2,
+            matrixElements:[[1, 2],
+                            [3, 4],
+                            [5, 6]] });
+        matrixB = new Matrix({
+            rowsNumber: 2,
+            collsNumber: 4,
+            matrixElements:[[1, 2, 3, 4],
+                            [5, 6, 7, 8]] }),
+        matrixC = new Matrix({
+            rowsNumber: 3,
+            collsNumber: 4 });
 
     renderAll();
 
@@ -154,21 +165,13 @@
     btnClear.addEventListener("click", function () {
         matrixA.clear();
         matrixB.clear();
-        matrixC.clear();
+        if(matrixC) matrixC.clear();
         showError("none");
         renderAll();
     });
     btnExchange.addEventListener("click", function () {
-        // exchangeMatrices(matrixA,matrixB);
-        var tempMatrix = matrixB;
-        matrixB = matrixA;
-        matrixA = tempMatrix;
+        exchangeMatrices(matrixA,matrixB);
 
-        matrixA.rotateMatrix();
-        matrixB.rotateMatrix();
-        matrixC = calculateMatrixSumm(matrixA, matrixB);
-        renderAll();
-        showError("none");
     });
     btnAddRow.addEventListener("click", function () {
         switch ($('input[name=matrix-selection]:checked')[0].id) {
@@ -223,9 +226,16 @@
     }
 
     function setAllDefault() {
-        matrixA = new Matrix(DEFAULT_FIRST, DEFAULT_SECOND);
-        matrixB = new Matrix(DEFAULT_SECOND, DEFAULT_THIRD);
-        matrixC = new Matrix(DEFAULT_FIRST, DEFAULT_THIRD);
+
+        matrixA = new Matrix({
+            rowsNumber: DEFAULT_FIRST,
+            collsNumber: DEFAULT_SECOND});
+        matrixB = new Matrix({
+            rowsNumber: DEFAULT_SECOND,
+            collsNumber: DEFAULT_THIRD});
+        matrixC = new Matrix({
+            rowsNumber: DEFAULT_FIRST,
+            collsNumber: DEFAULT_THIRD});
     }
 
     function renderAll() {
@@ -283,7 +293,7 @@
                 break;
         }
         var errorDiv = $("#error-text")[0];
-        errorDiv.innerText = errorText;
+        errorDiv.textContent = errorText;
 
     }
 
@@ -339,7 +349,10 @@
             return result;
         }
 
-        return new Matrix(matrixA.rowsNumber, matrixB.collsNumber, resultMatrix);
+
+        return new Matrix({rowsNumber: matrixA.rowsNumber,
+                            collsNumber: matrixB.collsNumber,
+                            matrixElements:resultMatrix});
     }
 
     function renderMatrix(matrix, targetElement, readonly) {
@@ -419,6 +432,9 @@
 
         matrixA.rotateMatrix();
         matrixB.rotateMatrix();
+        matrixC = calculateMatrixSumm(matrixA, matrixB);
+        renderAll();
+        showError("none");
 
     }
 })();
