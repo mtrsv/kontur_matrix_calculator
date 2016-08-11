@@ -107,68 +107,31 @@
             DEFAULT_THIRD = 4,
             MAX_SIZE = 10,
             MIN_SIZE = 2,
-            MAX_VALUE = 10;
+            MAX_VALUE = 10,
 
-        var calculatorElement = options.calculatorElement,
+            calculatorElement = options.calculatorElement,
             resultDiv = calculatorElement.querySelector(".result-matrix .matrix"),
             aDiv = calculatorElement.querySelector(".first-matrix .matrix"),
             bDiv = calculatorElement.querySelector(".second-matrix .matrix"),
             controls = calculatorElement.querySelector(".left-bar"),
-            matrices = calculatorElement.querySelector(".right-bar");
-
-        var matrixA = new Matrix({
-                rowsNumber: 3,
-                collsNumber: 2,
-                matrixElements:
-                    [[1, 2],
-                    [3, 4],
-                    [5, 6]]
-            });
-            matrixB = new Matrix({
-                rowsNumber: 2,
-                collsNumber: 4,
-                matrixElements:
-                    [[1, 2, 3, 4],
-                     [5, 6, 7, 8]]
-            }),
-            matrixC = new Matrix({
-                rowsNumber: 3,
-                collsNumber: 4
-            });
-
-        addListeners();
-        renderAll();
-
-
-
-        function updateElements() {
-            matrixA.updateElements(".first-matrix");
-            matrixB.updateElements(".second-matrix");
-        }
-
-        function setAllDefault() {
+            matrices = calculatorElement.querySelector(".right-bar"),
 
             matrixA = new Matrix({
                 rowsNumber: DEFAULT_FIRST,
                 collsNumber: DEFAULT_SECOND
-            });
+            }),
             matrixB = new Matrix({
                 rowsNumber: DEFAULT_SECOND,
                 collsNumber: DEFAULT_THIRD
-            });
-            matrixC = new Matrix({
-                rowsNumber: DEFAULT_FIRST,
-                collsNumber: DEFAULT_THIRD
-            });
-        }
+            }),
+            matrixC;
 
-        function renderAll() {
-            renderMatrix(matrixA, aDiv);
-            renderMatrix(matrixB, bDiv);
-            renderMatrix(matrixC, resultDiv, "readonly");
-            // console.log("render all");
-        }
+        if (options.matrixA) matrixA = new Matrix(options.matrixA);
+        if (options.matrixB) matrixB = new Matrix(options.matrixB);
+        matrixC = calculateMatrixSumm(matrixA,matrixB);
 
+        addListeners();
+        renderAll();
 
         function addListeners() {
             matrices.addEventListener("click",onMatrixClick.bind(this));
@@ -288,6 +251,29 @@
             }
         }
 
+        function updateElements() {
+            matrixA.updateElements(".first-matrix");
+            matrixB.updateElements(".second-matrix");
+        }
+
+        function setAllDefault() {
+
+            matrixA = new Matrix({
+                rowsNumber: DEFAULT_FIRST,
+                collsNumber: DEFAULT_SECOND
+            });
+            matrixB = new Matrix({
+                rowsNumber: DEFAULT_SECOND,
+                collsNumber: DEFAULT_THIRD
+            });
+        }
+
+        function renderAll() {
+            renderMatrix(matrixA, aDiv);
+            renderMatrix(matrixB, bDiv);
+            renderMatrix(matrixC, resultDiv, "readonly");
+        }
+
         function showError(errorName) {
             var errorText = '';
             switch (errorName) {
@@ -316,36 +302,23 @@
             asideDiv.style.backgroundColor = color;
         }
 
-        function insertProperty(string, propName, propValue) {
-            var propToReplace = "{{" + propName + "}}";
-            string = string.replace(new RegExp(propToReplace, "g"), propValue);
-            return string
-        };
-
-
         function calculateMatrixSumm(matrixA, matrixB) {
             var resultMatrix = [];
             var iNumber;
-            // debugger;
             if (matrixA.collsNumber == matrixB.rowsNumber) {
                 iNumber = matrixA.collsNumber;
                 resultMatrix = createElementsArray(matrixA.rowsNumber, matrixB.collsNumber);
             } else return null;
 
             function createElementsArray(rows, colls) {
-                // console.log("Rows: " + rows + ", colls: " + colls);
                 var elements = [];
                 for (var i = 0; i < rows; i++) {
                     var newRow = [];
                     elements[i] = newRow;
                     for (var j = 0; j < colls; j++) {
-                        // newRow[k] = matrixA.matrixElements[k][i]*matrixB.matrixElements[i][k];
                         newRow[j] = calculateElement(i, j);
-                        // console.log(i,j,newRow[j]);
                     }
                 }
-                /*console.log("Array:");
-                 console.log(elements);*/
                 return elements;
             }
 
@@ -353,8 +326,6 @@
                 var result = 0;
                 for (var k = 0; k < iNumber; k++) {
                     result += matrixA.matrixElements[i][k] * matrixB.matrixElements[k][j];
-                    // console.log(result + "=" + matrixA.matrixElements[i][k] + "*"+ matrixB.matrixElements[k][j]);
-                    // debugger;
                 }
                 return result;
             }
@@ -366,7 +337,6 @@
                 matrixElements: resultMatrix
             });
         }
-
 
         function renderMatrix(matrix, targetElement, readonly) {
             /*generate matrix in target element*/
@@ -414,7 +384,6 @@
 
         }
 
-
         function exchangeMatrices(matrixA, matrixB) {
             var tempMatrix = matrixB;
             matrixB = matrixA;
@@ -425,11 +394,25 @@
             matrixC = calculateMatrixSumm(matrixA, matrixB);
             renderAll();
             resetError();
-
         }
     }
 
-    var mCalc = new MatrixCalculator({
-        calculatorElement: document.querySelector("#matrix-calculator")
+    global.$mCalc = new MatrixCalculator({
+        calculatorElement: document.querySelector("#matrix-calculator"),
+        matrixA:{
+            rowsNumber: 3,
+            collsNumber: 2,
+            matrixElements:
+                [[1, 2],
+                [3, 4],
+                [5, 6]]
+        },
+        matrixB:{
+            rowsNumber: 2,
+            collsNumber: 4,
+            matrixElements:
+                [[1, 2, 3, 4],
+                [5, 6, 7, 8]]
+        }
     });
-})();
+})(window);
