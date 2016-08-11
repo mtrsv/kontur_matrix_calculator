@@ -359,7 +359,6 @@
         }
 
         function checkButtonsState(){
-            console.log("check");
             if(currentMatrix.rowsNumber >= MAX_SIZE) {
                 controls.querySelector('#btn-add-row').classList.add("btn-disabled");
             } else {
