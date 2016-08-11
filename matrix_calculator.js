@@ -144,7 +144,7 @@
         }
 
         function addListeners() {
-            matrices.addEventListener("click",onMatrixClick.bind(this));
+            calculatorElement.addEventListener("click",onMatrixClick.bind(this));
             matrices.addEventListener("blur",onMatrixBlur.bind(this),true);
             controls.addEventListener("click",onControlsClick.bind(this));
             controls.addEventListener("change",onRadioChange.bind(this));
