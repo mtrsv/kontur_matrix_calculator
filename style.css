@@ -230,12 +230,7 @@
 
 }
 
-.btn-disabled,.btn-disabled:hover,.btn-disabled:focus,.btn-disabled:active{
-    border: 1px solid #d9d9d9;
-    background: #f2f2f2;
-    color: #808080;
-    box-shadow: none;
-}
+
 /* end command-button */
 
 
@@ -308,8 +303,8 @@
 
 
 
-.arrow-button-right:after, .arrow-button-right:before{
-
+.arrow-button-right:after,
+.arrow-button-right:before{
     top: 50%;
     border: solid transparent;
     content: "";
@@ -319,7 +314,8 @@
     pointer-events: none;
 }
 
-.arrow-button-right:after, .arrow-button-right:before{
+.arrow-button-right:after,
+.arrow-button-right:before{
     left: 100%;
 }
 
@@ -410,3 +406,18 @@
 }
 
 /* end arrow-button */
+
+.btn-disabled,
+.btn-disabled:hover,
+.btn-disabled:focus,
+.btn-disabled:active{
+    border: 1px solid #d9d9d9;
+    background: #f2f2f2;
+    color: #808080;
+    box-shadow: none;
+}
+
+.btn-disabled .konturIconic{
+    color: #808080;
+
+}

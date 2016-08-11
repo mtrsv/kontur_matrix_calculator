@@ -67,22 +67,21 @@
             this.addRow = function() {
                 if (self.rowsNumber == MAX_SIZE) return;
                 self.rowsNumber++;
-                var newRow = [];
-                self.matrixElements.push(newRow);
-                renderAll();
+                self.matrixElements.push([]);
             };
 
             this.deleteRow = function() {
                 if (self.rowsNumber <= MIN_SIZE) return;
                 self.rowsNumber--;
                 self.matrixElements.pop();
-                renderAll();
             };
 
             this.addColl = function() {
                 if (self.collsNumber == MAX_SIZE) return;
                 self.collsNumber++;
-                renderAll();
+                for (var i = 0; i < self.rowsNumber; i++) {
+                    self.matrixElements[i].push(null);
+                }
             };
 
             this.deleteColl = function() {
@@ -92,7 +91,6 @@
                 for (var i = 0; i < self.rowsNumber; i++) {
                     self.matrixElements[i].pop();
                 }
-                renderAll();
             };
 
             this.clear = function() {
@@ -138,6 +136,7 @@
         linkMatrices();
         addListeners();
         renderAll();
+        checkButtonsState();
 
         function linkMatrices(){
             matrixA.link(matrixADiv);
@@ -185,10 +184,13 @@
                         currentMatrix = matrixB;
                         break;
                 }
+                checkButtonsState();
             }
 
             function onControlsClick(e){
                 // console.dir(e.target);
+                if(e.target.classList.contains("btn-disabled")) return;
+
                 switch(e.target.id){
                     case "btn-multiply":
                         updateElements();
@@ -222,6 +224,8 @@
                         resetError();
                         break;
                 }
+                renderAll();
+                checkButtonsState();
             }
 
         }
@@ -295,13 +299,12 @@
         function renderMatrix(matrix, targetElement, readonly) {
             /*generate matrix in target element*/
             // console.dir(targetElement.className);
-            targetElement.innerHTML = "";
 
             if (!matrix) {
                 showError("not_commutative");
                 return;
             }
-
+            targetElement.innerHTML = "";
             resetError();
 
             var rowsNumber = matrix.rowsNumber,
@@ -353,6 +356,31 @@
             if (resultMatrix) matrixC = resultMatrix;
             renderAll();
             resetError();
+        }
+
+        function checkButtonsState(){
+            console.log("check");
+            if(currentMatrix.rowsNumber >= MAX_SIZE) {
+                controls.querySelector('#btn-add-row').classList.add("btn-disabled");
+            } else {
+                controls.querySelector('#btn-add-row').classList.remove("btn-disabled");
+            }
+            if(currentMatrix.rowsNumber <= MIN_SIZE) {
+                controls.querySelector('#btn-delete-row').classList.add("btn-disabled");
+            } else {
+                controls.querySelector('#btn-delete-row').classList.remove("btn-disabled");
+            }
+            if(currentMatrix.collsNumber >= MAX_SIZE) {
+                controls.querySelector('#btn-add-coll').classList.add("btn-disabled");
+            } else {
+                controls.querySelector('#btn-add-coll').classList.remove("btn-disabled");
+            }
+            if(currentMatrix.collsNumber <= MIN_SIZE) {
+                controls.querySelector('#btn-delete-coll').classList.add("btn-disabled");
+            } else {
+                controls.querySelector('#btn-delete-coll').classList.remove("btn-disabled");
+            }
+
         }
     }
 
