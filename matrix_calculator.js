@@ -1,8 +1,6 @@
 (function(global) {
     function MatrixCalculator(options) {
 
-        var calculatorElement = options.calculatorElement;
-
         function Matrix(options) {
             this.rowsNumber = options.rowsNumber;
             this.collsNumber = options.collsNumber;
@@ -123,7 +121,10 @@
 
         }
 
-        // var testDiv = $("#test")[0];
+        var calculatorElement = options.calculatorElement,
+            controls = calculatorElement.querySelector(".left-bar"),
+            matrices = calculatorElement.querySelector(".right-bar");
+
         var DEFAULT_FIRST = 3,
             DEFAULT_SECOND = 2,
             DEFAULT_THIRD = 4,
@@ -131,103 +132,34 @@
             MIN_SIZE = 2,
             MAX_VALUE = 10;
 
-
-        var resultDiv = calculatorElement.querySelector(".result-matrix"),
-            aDiv = calculatorElement.querySelector(".first-matrix"),
-            bDiv = calculatorElement.querySelector(".second-matrix"),
+        var resultDiv = calculatorElement.querySelector(".result-matrix .matrix"),
+            aDiv = calculatorElement.querySelector(".first-matrix .matrix"),
+            bDiv = calculatorElement.querySelector(".second-matrix .matrix"),
 
             matrixA = new Matrix({
                 rowsNumber: 3,
                 collsNumber: 2,
-                matrixElements: [[1, 2],
+                matrixElements:
+                    [[1, 2],
                     [3, 4],
                     [5, 6]]
             });
             matrixB = new Matrix({
                 rowsNumber: 2,
                 collsNumber: 4,
-                matrixElements: [[1, 2, 3, 4],
-                    [5, 6, 7, 8]]
+                matrixElements:
+                    [[1, 2, 3, 4],
+                     [5, 6, 7, 8]]
             }),
             matrixC = new Matrix({
                 rowsNumber: 3,
                 collsNumber: 4
             });
 
+        addListeners();
         renderAll();
 
 
-        var btnMultiply = calculatorElement.querySelector("#btn-multiply"),
-            btnClear = calculatorElement.querySelector("#btn-clear"),
-            btnExchange = calculatorElement.querySelector("#btn-exchange"),
-            btnAddRow = calculatorElement.querySelector("#btn-add-row"),
-            btnDeleteRow = calculatorElement.querySelector("#btn-delete-row"),
-            btnAddColl = calculatorElement.querySelector("#btn-add-coll"),
-            btnDeleteColl = calculatorElement.querySelector("#btn-delete-coll");
-
-        btnMultiply.addEventListener("click", function () {
-            updateElements();
-
-            matrixC = calculateMatrixSumm(matrixA, matrixB);
-            renderMatrix(matrixC, resultDiv, "readonly");
-        })
-        btnClear.addEventListener("click", function () {
-            matrixA.clear();
-            matrixB.clear();
-            if (matrixC) matrixC.clear();
-            showError("none");
-            renderAll();
-        });
-        btnExchange.addEventListener("click", function () {
-            exchangeMatrices(matrixA, matrixB);
-
-        });
-        btnAddRow.addEventListener("click", function () {
-            switch ($('input[name=matrix-selection]:checked')[0].id) {
-                case "first-matrix-radio":
-                    matrixA.addRow();
-                    break;
-                case "second-matrix-radio":
-                    matrixB.addRow();
-                    break;
-            }
-        });
-        btnDeleteRow.addEventListener("click", function () {
-            switch ($('input[name=matrix-selection]:checked')[0].id) {
-                case "first-matrix-radio":
-                    matrixA.deleteRow();
-                    break;
-                case "second-matrix-radio":
-                    matrixB.deleteRow();
-                    break;
-            }
-            showError("none");
-
-        });
-        btnAddColl.addEventListener("click", function () {
-            switch ($('input[name=matrix-selection]:checked')[0].id) {
-                case "first-matrix-radio":
-                    matrixA.addColl();
-                    break;
-                case "second-matrix-radio":
-                    matrixB.addColl();
-                    break;
-            }
-            showError("none");
-
-        });
-        btnDeleteColl.addEventListener("click", function () {
-            switch ($('input[name=matrix-selection]:checked')[0].id) {
-                case "first-matrix-radio":
-                    matrixA.deleteColl();
-                    break;
-                case "second-matrix-radio":
-                    matrixB.deleteColl();
-                    break;
-            }
-            showError("none");
-
-        });
 
         function updateElements() {
             matrixA.updateElements(".first-matrix");
@@ -259,14 +191,18 @@
 
 
         function addListeners() {
+            matrices.addEventListener("click",onMatrixClick.bind(this));
+            matrices.addEventListener("blur",onMatrixBlur.bind(this),true);
+            controls.addEventListener("click",onControllsClick.bind(this));
+
             function onMatrixClick(e) {
-                if (!e.target.classList.contains(".matrix-cell")) return;
+                if (!e.target.classList.contains("matrix-cell")) return;
                 e.target.select();
                 setLeftBarColor("#5199DB");
             }
 
             function onMatrixBlur(e) {
-                if (!e.target.classList.contains(".matrix-cell")) return;
+                if (!e.target.classList.contains("matrix-cell")) return;
                 setLeftBarColor("none");
 
                 e.target.classList.remove("sell-default");
@@ -281,13 +217,94 @@
                 }
             }
 
-        }
+            function onControllsClick(e){
+                // console.dir(e.target);
+                switch(e.target.id){
+                    case "btn-multiply":
+                        onClick_btnMultiply();
+                        break;
+                    case "btn-clear":
+                        onClick_btnClear();
+                        break;
+                    case "btn-exchange":
+                        onClick_btnExchange();
+                        break;
+                    case "btn-add-row":
+                        onClick_btnAddRow();
+                        break;
+                    case "btn-delete-row":
+                        onClick_btnDeleteRow()
+                        break;
+                    case "btn-add-coll":
+                        onClick_btnAddColl();
+                        break;
+                    case "btn-delete-coll":
+                        onClick_btnDeleteColl();
+                        break;
+                }
+            }
 
-        function removeListeners() {
-            var cellArray = $(".matrix-cell");
-            for (var i = 0; i < cellArray.length; i++) {
-                cellArray[i].onclick = null;
-                cellArray[i].onblur = null;
+            function onClick_btnMultiply() {
+                updateElements();
+
+                matrixC = calculateMatrixSumm(matrixA, matrixB);
+                renderMatrix(matrixC, resultDiv, "readonly");
+            }
+            function onClick_btnClear() {
+                matrixA.clear();
+                matrixB.clear();
+                if (matrixC) matrixC.clear();
+                showError("none");
+                renderAll();
+            }
+            function onClick_btnExchange() {
+                exchangeMatrices(matrixA, matrixB);
+
+            }
+            function onClick_btnAddRow() {
+                switch ($('input[name=matrix-selection]:checked')[0].id) {
+                    case "first-matrix-radio":
+                        matrixA.addRow();
+                        break;
+                    case "second-matrix-radio":
+                        matrixB.addRow();
+                        break;
+                }
+            }
+            function onClick_btnDeleteRow() {
+                switch ($('input[name=matrix-selection]:checked')[0].id) {
+                    case "first-matrix-radio":
+                        matrixA.deleteRow();
+                        break;
+                    case "second-matrix-radio":
+                        matrixB.deleteRow();
+                        break;
+                }
+                showError("none");
+
+            }
+            function onClick_btnAddColl() {
+                switch ($('input[name=matrix-selection]:checked')[0].id) {
+                    case "first-matrix-radio":
+                        matrixA.addColl();
+                        break;
+                    case "second-matrix-radio":
+                        matrixB.addColl();
+                        break;
+                }
+                showError("none");
+
+            }
+            function onClick_btnDeleteColl() {
+                switch ($('input[name=matrix-selection]:checked')[0].id) {
+                    case "first-matrix-radio":
+                        matrixA.deleteColl();
+                        break;
+                    case "second-matrix-radio":
+                        matrixB.deleteColl();
+                        break;
+                }
+                showError("none");
             }
         }
 
@@ -372,7 +389,7 @@
         function renderMatrix(matrix, targetElement, readonly) {
             /*generate matrix in target element*/
             // console.dir(targetElement.className);
-            removeListeners();
+            targetElement.innerHTML = "";
 
             if (!matrix) {
                 //targetElement.innerHTML = "matrix = null";
@@ -413,7 +430,6 @@
                 targetElement.appendChild(matrixRow[i]);
             }
 
-            addListeners();
 
         }
 
