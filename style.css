@@ -39,6 +39,12 @@
     transition: 200ms all;
     padding: 15px 32px;
 }
+.left-bar--error{
+    background-color: rgb(246, 193, 192);
+}
+.left-bar--editing{
+    background-color: rgb(81, 153, 219);
+}
 
 #error-text{
     color: #DA0902;
@@ -76,10 +82,10 @@
     border: 2px solid black;
     display: inline-block;
     width: 15px;
-    //vertical-align: middle;
     height: 100%;
     position: absolute;
     top: 0;
+    transition: all .5s;
 }
 
 .matrix-bracket-left{
@@ -97,11 +103,18 @@
     width: 40px;
     height: 40px;
     display: inline-block;
-    border: 1px solid #d9d9d9;
+    border: 1px solid rgb(217, 217, 217);
+    border-top: 1px solid rgb(178, 178, 178);
     margin-right: 5px;
     text-align: center;
-    box-shadow: inset 0px 1px 1px -1px; /*color?*/
-    /*vertical-align: bottom;*/
+    -webkit-box-shadow: inset 0px 1px 1px 0px rgba(0, 0, 0, .1);
+    -moz-box-shadow:    inset 0px 1px 1px 0px rgba(0, 0, 0, .1);
+    box-shadow:         inset 0px 1px 1px 0px rgba(0, 0, 0, .1);
+    /*box-shadow: inset 0px 1px 1px -1px;*/
+}
+
+.matrix-cell[readonly]{
+    border: 1px solid rgb(217, 217, 217);
 }
 
 
