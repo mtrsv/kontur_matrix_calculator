@@ -29,18 +29,12 @@
                     self.matrixElements[i] = [];
                 }
 
-                /*console.log(source);
-                 console.log(collsNumber);*/
-
                 var matrixCells = $(source + " .matrix-cell");
-                // console.log(matrixCells);
                 for (i = 0; i < matrixCells.length; i++) {
                     var positionInRow = i % self.collsNumber;
                     var rowNumber = Math.floor(i / self.collsNumber);
 
                     self.matrixElements[rowNumber][positionInRow] = matrixCells[i].value;
-                    // console.log(matrixCells[i].value);
-                    // console.log(rowNumber,positionInRow,matrixCells[i].value);
                 }
                 return self;
             };
@@ -73,15 +67,8 @@
             this.addRow = function () {
                 if (self.rowsNumber == MAX_SIZE) return;
                 self.rowsNumber++;
-
                 var newRow = [];
-
-                for (var i = 0; i < self.collsNumber; i++) {
-                    newRow[i] = null;
-                }
-
-                self.matrixElements[self.matrixElements.length] = newRow;
-                // console.dir(matrixElements);
+                self.matrixElements.push(newRow);
                 renderAll();
             };
 
@@ -95,10 +82,6 @@
             this.addColl = function () {
                 if (self.collsNumber == MAX_SIZE) return;
                 self.collsNumber++;
-
-                for (var i = 0; i < self.rowsNumber; i++) {
-                    self.matrixElements[i].push(null);
-                }
                 renderAll();
             };
 
@@ -109,21 +92,15 @@
                 for (var i = 0; i < self.rowsNumber; i++) {
                     self.matrixElements[i].pop();
                 }
-                //console.dir(self.collsNumber);
                 renderAll();
             };
 
             this.clear = function () {
-                // this.matrixElements = createElementsArray(rowsNumber,collsNumber,"");
                 self.matrixElements = createElementsArray(self.rowsNumber, self.collsNumber);
             };
 
 
         }
-
-        var calculatorElement = options.calculatorElement,
-            controls = calculatorElement.querySelector(".left-bar"),
-            matrices = calculatorElement.querySelector(".right-bar");
 
         var DEFAULT_FIRST = 3,
             DEFAULT_SECOND = 2,
@@ -132,11 +109,14 @@
             MIN_SIZE = 2,
             MAX_VALUE = 10;
 
-        var resultDiv = calculatorElement.querySelector(".result-matrix .matrix"),
+        var calculatorElement = options.calculatorElement,
+            resultDiv = calculatorElement.querySelector(".result-matrix .matrix"),
             aDiv = calculatorElement.querySelector(".first-matrix .matrix"),
             bDiv = calculatorElement.querySelector(".second-matrix .matrix"),
+            controls = calculatorElement.querySelector(".left-bar"),
+            matrices = calculatorElement.querySelector(".right-bar");
 
-            matrixA = new Matrix({
+        var matrixA = new Matrix({
                 rowsNumber: 3,
                 collsNumber: 2,
                 matrixElements:
@@ -193,7 +173,7 @@
         function addListeners() {
             matrices.addEventListener("click",onMatrixClick.bind(this));
             matrices.addEventListener("blur",onMatrixBlur.bind(this),true);
-            controls.addEventListener("click",onControllsClick.bind(this));
+            controls.addEventListener("click",onControlsClick.bind(this));
 
             function onMatrixClick(e) {
                 if (!e.target.classList.contains("matrix-cell")) return;
@@ -217,7 +197,7 @@
                 }
             }
 
-            function onControllsClick(e){
+            function onControlsClick(e){
                 // console.dir(e.target);
                 switch(e.target.id){
                     case "btn-multiply":
@@ -254,7 +234,7 @@
                 matrixA.clear();
                 matrixB.clear();
                 if (matrixC) matrixC.clear();
-                showError("none");
+                resetError();
                 renderAll();
             }
             function onClick_btnExchange() {
@@ -280,7 +260,7 @@
                         matrixB.deleteRow();
                         break;
                 }
-                showError("none");
+                resetError();
 
             }
             function onClick_btnAddColl() {
@@ -292,7 +272,7 @@
                         matrixB.addColl();
                         break;
                 }
-                showError("none");
+                resetError();
 
             }
             function onClick_btnDeleteColl() {
@@ -304,7 +284,7 @@
                         matrixB.deleteColl();
                         break;
                 }
-                showError("none");
+                resetError();
             }
         }
 
@@ -316,14 +296,16 @@
                         "не равно количеству строк матрицы В.";
                     setLeftBarColor("#F6C1C0");
                     break;
-                case "none":
-                    errorText = "";
-                    setLeftBarColor("none");
-                    break;
             }
-            var errorDiv = $("#error-text")[0];
+            var errorDiv = calculatorElement.querySelector("#error-text");
             errorDiv.textContent = errorText;
+            setLeftBarColor("none");
 
+        }
+
+        function resetError(){
+            var errorDiv = calculatorElement.querySelector("#error-text");
+            errorDiv.textContent = "";
         }
 
         function setLeftBarColor(color) {
@@ -397,9 +379,8 @@
                 return;
             }
             setLeftBarColor();
-            showError("none");
-            var matrixName = targetElement.className,
-                rowsNumber = matrix.rowsNumber,
+            resetError();
+            var rowsNumber = matrix.rowsNumber,
                 collsNumber = matrix.collsNumber;
 
             for (var i = 0; i < rowsNumber; i++) {
@@ -416,7 +397,7 @@
                         rowCells[k].setAttribute("readonly", "");
                     }
                     rowCells[k].classList.add("matrix-cell");
-                    if (matrix.matrixElements[i][k] == null || isNaN(matrix.matrixElements[i][k])) {
+                    if (!matrix.matrixElements[i][k] || isNaN(matrix.matrixElements[i][k])) {
                         rowCells[k].classList.add("sell-default");
                         rowCells[k].setAttribute("value", "c" + (i + 1) + "," + (k + 1));
 
@@ -443,7 +424,7 @@
             matrixB.rotateMatrix();
             matrixC = calculateMatrixSumm(matrixA, matrixB);
             renderAll();
-            showError("none");
+            resetError();
 
         }
     }
