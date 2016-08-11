@@ -142,7 +142,6 @@
         function linkMatrices(){
             matrixA.link(matrixADiv);
             matrixB.link(matrixBDiv);
-            matrixC.link(resultDiv);
         }
 
         function addListeners() {
@@ -152,15 +151,17 @@
             controls.addEventListener("change",onRadioChange.bind(this));
 
             function onMatrixClick(e) {
-                if (!e.target.classList.contains("matrix-cell")) return;
+                if (!e.target.classList.contains("matrix-cell") || e.target.hasAttribute("readonly")) {
+                    controls.classList.remove("left-bar--editing");
+                    return;
+                }
+
                 e.target.select();
                 controls.classList.add("left-bar--editing");
             }
 
             function onMatrixBlur(e) {
-                if (!e.target.classList.contains("matrix-cell")) return;
-                controls.classList.remove("left-bar--editing");
-
+                if (!e.target.classList.contains("matrix-cell") || e.target.hasAttribute("readonly")) return;
 
                 e.target.classList.remove("sell-default");
                 if (isNaN(e.target.value)) {
@@ -190,63 +191,39 @@
                 // console.dir(e.target);
                 switch(e.target.id){
                     case "btn-multiply":
-                        onClick_btnMultiply();
+                        updateElements();
+                        matrixC = calculateMatrixSumm(matrixA, matrixB);
+                        renderMatrix(matrixC, resultDiv, "readonly");
                         break;
                     case "btn-clear":
-                        onClick_btnClear();
+                        matrixA.clear();
+                        matrixB.clear();
+                        if (matrixC) matrixC.clear();
+                        resetError();
+                        renderAll();
                         break;
                     case "btn-exchange":
-                        onClick_btnExchange();
+                        exchangeMatrices();
                         break;
                     case "btn-add-row":
-                        onClick_btnAddRow();
+                        currentMatrix.addRow();
+                        resetError();
                         break;
                     case "btn-delete-row":
-                        onClick_btnDeleteRow()
+                        currentMatrix.deleteRow();
+                        resetError();
                         break;
                     case "btn-add-coll":
-                        onClick_btnAddColl();
+                        currentMatrix.addColl();
+                        resetError();
                         break;
                     case "btn-delete-coll":
-                        onClick_btnDeleteColl();
+                        currentMatrix.deleteColl();
+                        resetError();
                         break;
                 }
             }
 
-            function onClick_btnMultiply() {
-                updateElements();
-
-                matrixC = calculateMatrixSumm(matrixA, matrixB);
-                renderMatrix(matrixC, resultDiv, "readonly");
-            }
-            function onClick_btnClear() {
-                matrixA.clear();
-                matrixB.clear();
-                if (matrixC) matrixC.clear();
-                resetError();
-                renderAll();
-            }
-            function onClick_btnExchange() {
-                exchangeMatrices(matrixA, matrixB);
-
-            }
-            function onClick_btnAddRow() {
-                currentMatrix.addRow();
-                resetError();
-            }
-            function onClick_btnDeleteRow() {
-                currentMatrix.deleteRow();
-                resetError();
-            }
-            function onClick_btnAddColl() {
-                currentMatrix.addColl();
-                resetError();
-
-            }
-            function onClick_btnDeleteColl() {
-                currentMatrix.deleteColl();
-                resetError();
-            }
         }
 
         function updateElements() {
@@ -285,7 +262,7 @@
             if (matrixA.collsNumber == matrixB.rowsNumber) {
                 iNumber = matrixA.collsNumber;
                 resultMatrix = createElementsArray(matrixA.rowsNumber, matrixB.collsNumber);
-            } else return null;
+            } else return;
 
             function createElementsArray(rows, colls) {
                 var elements = [];
@@ -321,12 +298,12 @@
             targetElement.innerHTML = "";
 
             if (!matrix) {
-                //targetElement.innerHTML = "matrix = null";
                 showError("not_commutative");
                 return;
             }
-            controls.classList.remove("left-bar--error");
+
             resetError();
+
             var rowsNumber = matrix.rowsNumber,
                 collsNumber = matrix.collsNumber;
 
@@ -361,14 +338,19 @@
 
         }
 
-        function exchangeMatrices(matrixA, matrixB) {
-            var tempMatrix = matrixB;
+        function exchangeMatrices() {
+            var tempMatrix = matrixB,
+                tempElement;
             matrixB = matrixA;
             matrixA = tempMatrix;
+            tempElement = matrixB.targetElement
+            matrixB.link(matrixA.targetElement);
+            matrixA.link(tempElement);
 
             matrixA.rotateMatrix();
             matrixB.rotateMatrix();
-            matrixC = calculateMatrixSumm(matrixA, matrixB);
+            var resultMatrix = calculateMatrixSumm(matrixA, matrixB);
+            if (resultMatrix) matrixC = resultMatrix;
             renderAll();
             resetError();
         }
