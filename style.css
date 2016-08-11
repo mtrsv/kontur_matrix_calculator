@@ -61,25 +61,36 @@
     padding: 15px 32px;
 
 }
+.matrix-container{
+    position: relative;
+    display: inline-block;
+}
 .matrix {
     display: inline-block;
     vertical-align: middle;
-    margin: 5px 0;
+    margin: 8px 15px;
 }
 
-.matrix-border{
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
+.matrix-bracket-right,
+.matrix-bracket-left{
+    border: 2px solid black;
     display: inline-block;
     width: 15px;
-    vertical-align: middle;
+    //vertical-align: middle;
+    height: 100%;
+    position: absolute;
+    top: 0;
 }
 
-.matrix-border.left{
-    border-left: 2px solid black;
+.matrix-bracket-left{
+    float:left;
+    left: 0;
+    border-right: none;
 }
-.matrix-border.right{
-    border-right: 2px solid black;
+.matrix-bracket-right{
+    float:right;
+    right: 0;
+    border-left: none;
 }
 
 .matrix-cell{
@@ -144,16 +155,18 @@
     background-color: white;
 }
 
-.matrix-label#label-b{
-    display: block;
-    /*width: 10%;*/
-
-}
-.matrix-label{
-    text-align: center;
+.matrix-label-a{
     display: inline-block;
+    text-align: center;
     vertical-align: middle;
     font-size: 28px;
+}
+.matrix-label-b{
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 28px;
+    bottom: -40px;
 }
 
 /***** END RIGHT BAR *****/

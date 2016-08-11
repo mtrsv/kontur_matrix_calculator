@@ -242,7 +242,7 @@
         renderMatrix(matrixA, aDiv);
         renderMatrix(matrixB, bDiv);
         renderMatrix(matrixC, resultDiv, "readonly");
-        setLabelBWidth();
+        //setLabelBWidth();
         // console.log("render all");
     }
 
@@ -373,7 +373,7 @@
         var collsNumber = matrix.collsNumber;
 
         var generatedHtml = "";
-        generatedHtml = generatedHtml.concat("<div class='matrix-border left'></div>");
+        generatedHtml = generatedHtml.concat("<div class='matrix-bracket-left'></div>");
         generatedHtml = generatedHtml.concat("<div class='matrix'>");
 
         for (var i = 0; i < rowsNumber; i++) {
@@ -400,30 +400,31 @@
 
 
         generatedHtml = generatedHtml.concat('</div>');
-        generatedHtml = generatedHtml.concat('<div class="matrix-border right"></div>');
+        generatedHtml = generatedHtml.concat('<div class="matrix-bracket-right"></div>');
         generatedHtml = generatedHtml.concat('</div>');
 
         targetElement.innerHTML = generatedHtml;
 
 
-        var bracketsHeight = ($("." + matrixName)[0].clientHeight);
-        var brackets = $("." + matrixName + " .matrix-border");
+        /*var bracketsHeight = ($("." + matrixName)[0].clientHeight);
+        var brackets = $("." + matrixName + " .matrix-bracket");
         var leftBracket = brackets[0];
         var rightBracket = brackets[1];
 
         leftBracket.style.height = bracketsHeight + "px";
-        rightBracket.style.height = bracketsHeight + "px";
-        // $(matrixName + " .matrix-border")[1];
+        rightBracket.style.height = bracketsHeight + "px";*/
+
+        // $(matrixName + " .matrix-bracket")[1];
         addListeners();
 
     }
 
-    function setLabelBWidth() {
+    /*function setLabelBWidth() {
         var labelBDiv = $("#label-b")[0];
         var matrixBDiv = $(".second-matrix")[0];
         labelBDiv.style.width = matrixBDiv.clientWidth + "px";
         // console.dir(labelBDiv);
-    }
+    }*/
 
     function exchangeMatrices(matrixA, matrixB) {
         var tempMatrix = matrixB;
