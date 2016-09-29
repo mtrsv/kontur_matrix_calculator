@@ -1,4 +1,27 @@
 (function(global) {
+    document.addEventListener("DOMContentLoaded", onDomLoad);
+
+    function onDomLoad(){
+        global.mCalc = new MatrixCalculator({
+            calculatorElement: document.querySelector("#matrix-calculator"),
+            matrixA:{
+                rowsNumber: 3,
+                collsNumber: 2,
+                matrixElements:
+                  [[1, 2],
+                      [3, 4],
+                      [5, 6]]
+            },
+            matrixB:{
+                rowsNumber: 2,
+                collsNumber: 4,
+                matrixElements:
+                  [[1, 2, 3, 4],
+                      [5, 6, 7, 8]]
+            }
+        });
+    }
+
     function MatrixCalculator(options) {
 
         function Matrix(options) {
@@ -103,28 +126,28 @@
         }
 
         var DEFAULT_FIRST = 3,
-            DEFAULT_SECOND = 2,
-            DEFAULT_THIRD = 4,
-            MAX_SIZE = 10,
-            MIN_SIZE = 2,
-            MAX_VALUE = 10,
+          DEFAULT_SECOND = 2,
+          DEFAULT_THIRD = 4,
+          MAX_SIZE = 10,
+          MIN_SIZE = 2,
+          MAX_VALUE = 10,
 
-            calculatorElement = options.calculatorElement,
-            resultDiv = calculatorElement.querySelector(".result-matrix .matrix"),
-            matrixADiv = calculatorElement.querySelector(".first-matrix .matrix"),
-            matrixBDiv = calculatorElement.querySelector(".second-matrix .matrix"),
-            controls = calculatorElement.querySelector(".left-bar"),
-            matrices = calculatorElement.querySelector(".right-bar"),
+          calculatorElement = options.calculatorElement,
+          resultDiv = calculatorElement.querySelector(".result-matrix .matrix"),
+          matrixADiv = calculatorElement.querySelector(".first-matrix .matrix"),
+          matrixBDiv = calculatorElement.querySelector(".second-matrix .matrix"),
+          controls = calculatorElement.querySelector(".left-bar"),
+          matrices = calculatorElement.querySelector(".right-bar"),
 
-            matrixA = new Matrix({
-                rowsNumber: DEFAULT_FIRST,
-                collsNumber: DEFAULT_SECOND
-            }),
-            matrixB = new Matrix({
-                rowsNumber: DEFAULT_SECOND,
-                collsNumber: DEFAULT_THIRD
-            }),
-            matrixC;
+          matrixA = new Matrix({
+              rowsNumber: DEFAULT_FIRST,
+              collsNumber: DEFAULT_SECOND
+          }),
+          matrixB = new Matrix({
+              rowsNumber: DEFAULT_SECOND,
+              collsNumber: DEFAULT_THIRD
+          }),
+          matrixC;
 
         if (options.matrixA) matrixA = new Matrix(options.matrixA);
         if (options.matrixB) matrixB = new Matrix(options.matrixB);
@@ -246,7 +269,7 @@
             switch (errorName) {
                 case "not_commutative":
                     errorText = "Такие матрицы нельзя умножить, так как количесво столбцов матрицы А " +
-                        "не равно количеству строк матрицы В.";
+                      "не равно количеству строк матрицы В.";
                     controls.classList.add("left-bar--error");
                     break;
             }
@@ -308,7 +331,7 @@
             resetError();
 
             var rowsNumber = matrix.rowsNumber,
-                collsNumber = matrix.collsNumber;
+              collsNumber = matrix.collsNumber;
 
             for (var i = 0; i < rowsNumber; i++) {
                 var matrixRow = [];
@@ -343,7 +366,7 @@
 
         function exchangeMatrices() {
             var tempMatrix = matrixB,
-                tempElement;
+              tempElement;
             matrixB = matrixA;
             matrixA = tempMatrix;
             tempElement = matrixB.targetElement
@@ -383,22 +406,4 @@
         }
     }
 
-    global.$mCalc = new MatrixCalculator({
-        calculatorElement: document.querySelector("#matrix-calculator"),
-        matrixA:{
-            rowsNumber: 3,
-            collsNumber: 2,
-            matrixElements:
-                [[1, 2],
-                [3, 4],
-                [5, 6]]
-        },
-        matrixB:{
-            rowsNumber: 2,
-            collsNumber: 4,
-            matrixElements:
-                [[1, 2, 3, 4],
-                [5, 6, 7, 8]]
-        }
-    });
 })(window);
